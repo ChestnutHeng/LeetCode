@@ -4,6 +4,12 @@
  * [48] Rotate Image
  */
 
+// 思路：其实一个图像的旋转可以分解为每条边、每4个点的旋转
+// 坑1：i,j位置的点旋转后的点对应的坐标是什么
+// 坑2：注意每次哪些点要旋转，注意i,j的范围
+
+// 思路2：先转置矩阵，然后reverse每一行
+
 // @lc code=start
 #include <vector>
 #include <algorithm>
@@ -13,11 +19,16 @@ class Solution
 public:
     void rotate(vector<vector<int>> &matrix)
     {
-        for (int i = 0; i < matrix.size(); ++i)
+        int n = matrix.size();
+        if (n <= 1)
+            return;
+        for (int r = 0; r < n - 1 - r; r++)
         {
-            for (int j = 0; j < matrix[i].size(); ++j)
+            for (int c = r; c < n - 1 - r; c++)
             {
-                swap(matrix[i][j], matrix[j][matrix[i].size() - i]);
+                swap(matrix[r][c], matrix[c][n - r - 1]);
+                swap(matrix[r][c], matrix[n - r - 1][n - c - 1]);
+                swap(matrix[r][c], matrix[n - c - 1][r]);
             }
         }
     }
