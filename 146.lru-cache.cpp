@@ -12,80 +12,52 @@
 // 坑3：注意处理get不到的情况
 
 // @lc code=start
-#include <vector>
-#include <queue>
-#include <list>
-#include <unordered_map>
-using namespace std;
+#include "inc.h"
 
-class LRUCache
-{
+class LRUCache {
 public:
-    struct ListNode
-    {
-        int k;
-        int v;
-        ListNode(int kk, int vv)
-        {
-            k = kk;
-            v = vv;
-        }
-    };
-
-    int cap = 0;
-    list<ListNode> *que;
-    unordered_map<int, list<ListNode>::iterator> *values;
-    LRUCache(int capacity)
-    {
+    list<pair<int, int> > l;
+    map<int, list<pair<int, int> >::iterator> mp;
+    int cap;
+    LRUCache(int capacity) {
         cap = capacity;
-        que = new list<ListNode>();
-        values = new unordered_map<int, list<ListNode>::iterator>();
     }
-
-    int get(int key)
-    {
-        if (values->count(key))
-        {
-            auto addr = (*values)[key];
-            int v = addr->v;
-            que->erase(addr);
-            que->push_front(ListNode(key, v));
-            (*values)[key] = que->begin();
-            return v;
-        }
-        else
-        {
+    
+    int get(int key) {
+        printf("cache.get(%d);\n", key);
+        if(mp.count(key)){
+            int value = mp[key]->second;
+            l.erase(mp[key]);
+            l.push_front(pair<int, int>(key, value));
+            mp[key] = l.begin();
+            return value;
+        }else{
             return -1;
         }
     }
-
-    void put(int key, int value)
-    {
-        if (values->count(key))
-        {
-            auto addr = (*values)[key];
-            que->erase(addr);
-            que->push_front(ListNode(key, value));
-            (*values)[key] = que->begin();
-        }
-        else
-        {
-            que->push_front(ListNode(key, value));
-            int oldk = que->back().k;
-            if (que->size() > cap)
-            {
-                que->pop_back();
-                (*values).erase(oldk);
+    
+    void put(int key, int value) {
+        printf("cache.put(%d, %d);\n", key, value);
+        if(mp.count(key)){
+            l.erase(mp[key]);
+        }else{
+            if(l.size() >= cap){
+                mp.erase(l.back().first);
+                l.pop_back();
             }
-            (*values)[key] = que->begin();
         }
+        l.push_front(pair<int, int> (key, value));
+        mp[key] = l.begin();
     }
 };
 
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj = new LRUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
- */
+int main(){
+    LRUCache cache = LRUCache( 1 /* capacity */ );
+
+    cache.put(2, 1);
+    cache.get(2);
+    cache.put(3, 2);
+    cache.get(2);
+    cache.get(3);
+}
 // @lc code=end

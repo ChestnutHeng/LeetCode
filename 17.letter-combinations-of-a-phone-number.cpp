@@ -8,44 +8,30 @@
 #include <string>
 #include <map>
 using namespace std;
-bool comp(int a,int b){return a < b;}
 
-map<char, string> phone = {{'2', "abc"}, {'3', "def"}, {'4', "ghi"}, {'5', "jkl"}, {'6', "mno"}, {'7', "pqrs"}, {'8', "tuv"}, {'9', "wxyz"}};
-
-// 没啥意思，注意顺序
+// 回溯/DFS
+// 注意空值
 class Solution {
 public:
-    
-    void letterSearch(vector<string> &ans, string digits, int index){
-        if (index == digits.size() - 1){
-            
-        }
-    }
-
+    map<char, string> phone = {{'2', "abc"}, {'3', "def"}, {'4', "ghi"}, {'5', "jkl"}, {'6', "mno"}, {'7', "pqrs"}, {'8', "tuv"}, {'9', "wxyz"}};
     vector<string> letterCombinations(string digits) {
         vector<string> ans;
-        if (digits.empty()){
-            return ans;
-        }
-        for(int n = 0; n < (phone)[digits[0]].size(); n++){
-            string s = string("") + phone[digits[0]][n];
-            ans.push_back(s);
-        }
-
-        for(int i = 1;i < digits.size(); ++i){
-            vector<string> new_ans;
-            reverse(ans.begin(), ans.end());
-            while(!ans.empty()){
-                string s = ans.back();
-                ans.pop_back();
-                for(int j =0; j < phone[digits[i]].size(); ++j){
-                    new_ans.push_back(s + phone[digits[i]][j]);
-                }
-            }
-            ans = new_ans;
-            new_ans.clear();
-        }
+        string now;
+        dfs(digits, 0, now,  ans);
         return ans;
+    }
+    
+    void dfs(string digits, int pos, string now, vector<string> &ans){
+        if(pos == digits.size()){
+            if(now.size())ans.push_back(now);
+            return;
+        }
+        char v = digits[pos];
+        for(auto c : phone[v]){
+            now.push_back(c);
+            dfs(digits, pos + 1, now, ans);
+            now.pop_back();
+        }
     }
 };
 
