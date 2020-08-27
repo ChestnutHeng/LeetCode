@@ -34,9 +34,9 @@ public:
         }
         int lf = maxPath(root->left);
         int rf = maxPath(root->right);
-        int newmax = max(lf, 0) + root->val + max(rf, 0);
+        int pathsum = max(lf, 0) + root->val + max(rf, 0);
         //cout << root->val << " " << newmax << lf << rf << endl;
-        maxval = max(newmax, maxval);
+        maxval = max(pathsum, maxval);
         return root->val + max(max(lf, 0), max(rf, 0));
     }
 };

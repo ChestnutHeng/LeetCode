@@ -19,39 +19,45 @@
 // 找到倒数第k个，和头连起来
 // 注意k=0
 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+
 class Solution
 {
 public:
     ListNode *rotateRight(ListNode *head, int k)
     {
-        if (head == NULL)
+        if (!head)
             return head;
-        int len = 0;
+        // len
         ListNode *tra = head;
-        while (tra)
-        {
-            len++;
-            tra = tra->next;
-        }
-        if (k >= len)
-        {
-            k = k % len;
-        }
-        tra = head;
-        ListNode *bro = head;
-        while (k--)
-        {
-            tra = tra->next;
-        }
+        int len = 1;
         while (tra->next)
         {
             tra = tra->next;
-            bro = bro->next;
+            len++;
         }
+        k = k % len;
+        if(k == 0){
+            return head;
+        }
+        // find k
+        ListNode *tra2 = head;
+        int step = len - k;
+        while (--step)
+        {
+            tra2 = tra2->next;
+        }
+        ListNode *newhead = tra2->next;
+        tra2->next = nullptr;
         tra->next = head;
-        tra = bro->next;
-        bro->next = NULL;
-        return tra;
+        return newhead;
     }
 };
 // @lc code=end

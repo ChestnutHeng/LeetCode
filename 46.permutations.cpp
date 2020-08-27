@@ -10,27 +10,30 @@ using namespace std;
 
 // 全排列的遍历
 
-class Solution {
+class Solution
+{
+    vector<vector<int>> ans;
+
 public:
-    void search(vector<vector<int>> &ans, vector<int> stack, vector<int> left){
-        if(stack.empty()){
-            ans.push_back(left);
-            return;
-        }
-        for(int i =0; i < stack.size(); ++i){
-            vector<int> tstack = stack;
-            vector<int> tleft = left;
-            tleft.push_back(stack[i]);
-            tstack.erase(tstack.begin() + i);
-            search(ans, tstack, tleft);
-        }
+    vector<vector<int>> permute(vector<int> &nums)
+    {
+        dfs(nums, 0, nums.size());
+        return ans;
     }
 
-    vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> ans;
-        vector<int> left;
-        search(ans, nums, left);
-        return ans;
+    void dfs(vector<int> &nums, int depth, int len)
+    {
+        if (depth == len)
+        {
+            ans.emplace_back(nums);
+            return;
+        }
+        for (int i = depth; i < len; ++i)
+        {
+            swap(nums[i], nums[depth]);
+            dfs(nums, depth + 1, len);
+            swap(nums[i], nums[depth]);
+        }
     }
 };
 
