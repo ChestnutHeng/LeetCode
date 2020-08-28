@@ -22,16 +22,14 @@ public:
         }
         return maxdp;
     }
-    int maxSubArrayTX(vector<int>& nums) {
-        int nowsum = 0;
+    int maxSubArrayTX(vector<int> &nums)
+    {
         int maxsum = INT_MIN;
-        for(int i = 0; i < nums.size(); ++i){
-            if(nums[i] > nums[i] + nowsum){
-                nowsum = nums[i];
-            }else{
-                nowsum = nums[i] + nowsum;
-            }
-            maxsum = max(maxsum, nowsum);
+        int lastsum = 0;
+        for (auto v : nums)
+        {
+            lastsum = max(lastsum + v, v);
+            maxsum = max(maxsum, lastsum);
         }
         return maxsum;
     }
